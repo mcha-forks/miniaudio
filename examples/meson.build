@@ -2,6 +2,7 @@ if 'sdl' in backends and device_io.enabled()
   executable(
     'custom_backend',
     'custom_backend.c',
+    name_suffix: host_system == 'emscripten' ? 'html' : [],
     dependencies: ma_sys_deps + ma_backend_deps,
     install: false,
     implicit_include_directories: false,
@@ -79,7 +80,7 @@ if engine and device_io.enabled() and resource_manager.enabled()
     implicit_include_directories: false,
     include_directories: ma_inc,
   )
-  if real_sdl2_dep.found()
+  if real_sdl2_dep.found() and host_system != 'emscripten'
     executable(
       'engine_sdl',
       'engine_sdl.c',
@@ -142,6 +143,7 @@ if resource_manager.enabled() and device_io.enabled()
   executable(
     'resource_manager',
     'resource_manager.c',
+    name_suffix: host_system == 'emscripten' ? 'html' : [],
     dependencies: ma_sys_deps + ma_backend_deps,
     install: false,
     implicit_include_directories: false,
@@ -171,6 +173,7 @@ if device_io.enabled()
   executable(
     'simple_duplex',
     'simple_duplex.c',
+    name_suffix: host_system == 'emscripten' ? 'html' : [],
     dependencies: ma_sys_deps + ma_backend_deps,
     install: false,
     implicit_include_directories: false,
@@ -231,6 +234,7 @@ if device_io.enabled() and generation
   executable(
     'simple_playback_sine',
     'simple_playback_sine.c',
+    name_suffix: host_system == 'emscripten' ? 'html' : [],
     dependencies: ma_sys_deps + ma_backend_deps,
     install: false,
     implicit_include_directories: false,
