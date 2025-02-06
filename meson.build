@@ -133,6 +133,7 @@ if host_system in [
   'dragonfly',
   'android',
   'darwin',
+  'emscripten',
 ]
   if runtime_linking.enabled()
     ma_sys_deps += dependency('dl')
@@ -213,6 +214,28 @@ if runtime_linking.disabled()
   if 'opensl' in backends
     ma_backend_deps += dependency('OpenSLES')
   endif
+
+  if 'webaudio' in backends
+    if get_option('webaudio_worklet')
+      ma_backend_deps += declare_dependency(
+        compile_args: [
+          '-sWASM_WORKERS=1',
+          '-DMA_ENABLE_AUDIO_WORKLETS',
+        ],
+        link_args: [
+          '-sWASM_WORKERS=1',
+          '-sAUDIO_WORKLET=1',
+          '-sASYNCIFY',
+        ],
+      )
+    else
+      ma_backend_deps += declare_dependency(
+        link_args: [
+          '-sWASM=0',
+        ],
+      )
+    endif
+  endif
 endif
 
 # miniaudio + extra modules.
@@ -250,6 +273,7 @@ ma_lib = library(
 
 ma_dep = declare_dependency(
   include_directories: ma_inc,
+  dependencies: ma_sys_deps + ma_backend_deps,
   link_with: ma_lib,
   compile_args: ma_global_args,
 )
