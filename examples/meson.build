@@ -231,6 +231,7 @@ if device_io.enabled() and generation
   executable(
     'simple_playback_sine',
     'simple_playback_sine.c',
+    name_suffix: host_system == 'emscripten' ? 'html' : [],
     dependencies: ma_sys_deps + ma_backend_deps,
     install: false,
     implicit_include_directories: false,
