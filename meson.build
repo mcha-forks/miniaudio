@@ -28,7 +28,11 @@ runtime_linking = get_option('runtime_linking').disable_auto_if(
 )
 use_sdl = get_option('sdl').enable_if('sdl' in backends)
 if runtime_linking.disabled()
-  real_sdl2_dep = dependency('sdl2', required: use_sdl)
+  if host_system == 'emscripten'
+    real_sdl2_dep = declare_dependency(compile_args: '--use-port=sdl2', link_args: '--use-port=sdl2')
+  else
+    real_sdl2_dep = dependency('sdl2', required: use_sdl)
+  endif
   sdl_dep = real_sdl2_dep
 else
   real_sdl2_dep = disabler()
